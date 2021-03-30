@@ -20,6 +20,7 @@ class LoginForm extends Component {
             code_button_loading : false,
             code_button_disabled:false, //激活按钮
             code_button_text : "获取验证码",
+            flag:true
         }
     }
     //登录
@@ -38,13 +39,15 @@ class LoginForm extends Component {
 
     //获取验证码
     getCode = ()=>{
+        if(!this.state.flag){return false}
         if(!this.state.username){
             message.warning('邮箱不能为空',1);
             return false
         }
 
         this.setState({
-            code_button_loading:true,
+            // code_button_loading:true,
+            flag:false,
             code_button_text:"发送中"
         })
 
@@ -60,7 +63,8 @@ class LoginForm extends Component {
         }).catch(error => {
             this.setState({
                 code_button_loading:false,
-                code_button_text:"重新获取"
+                code_button_text:"重新获取",
+                flag:true,
             })
     
         })
@@ -90,6 +94,7 @@ class LoginForm extends Component {
                 this.setState({
                     code_button_text:`重新获取`,
                     code_button_disabled:false,
+                    flag:true,
                 })
                 clearInterval(timer)
                 return false
@@ -180,7 +185,10 @@ class LoginForm extends Component {
                                         <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入验证码" />
                                     </Col>
                                     <Col span={9}>
-                                        <Button type="danger" 
+                                        <div  onClick={this.getCode}>
+                                            {code_button_text}
+                                        </div>
+                                        {/* <Button type="danger" 
                                             block 
                                             disabled={code_button_disabled}
                                             loading = {code_button_loading}
@@ -188,7 +196,7 @@ class LoginForm extends Component {
                                             onClick={this.getCode}
                                         >   
                                             {code_button_text}
-                                        </Button>
+                                        </Button> */}
                                     </Col>
                                 </Row>
                             </Form.Item>
